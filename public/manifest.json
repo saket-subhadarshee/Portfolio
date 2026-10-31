@@ -1,0 +1,17 @@
+{
+  "name": "Saket Subhadarshee (26BIT0190) — Calibre 01 & Signal Core Portfolio",
+  "short_name": "Saket.IT",
+  "description": "First-year B.Tech Information Technology portfolio at VIT Vellore featuring 60fps Calibre 01 Horology, Signal Core Telemetry, and interactive systems labs.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070B",
+  "theme_color": "#D4AF37",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

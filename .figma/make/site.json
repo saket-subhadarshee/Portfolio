@@ -1,0 +1,10 @@
+{
+  "description": "Showcases a designer’s portfolio projects with polished visuals and smooth animations, helping visitors explore work and appreciate its craft.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

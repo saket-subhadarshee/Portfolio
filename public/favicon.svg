@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="64" height="64" role="img" aria-label="Saket Subhadarshee SS Signal Core Icon">
+  <defs>
+    <linearGradient id="ss-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <linearGradient id="ss-amber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="108" height="108" rx="24" fill="#070A12" stroke="#1E293B" stroke-width="2.5"/>
+  <circle cx="60" cy="60" r="42" fill="none" stroke="#1E293B" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <path d="M38 26 L22 60 L38 94" fill="none" stroke="url(#ss-cyan)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 26 L98 60 L82 94" fill="none" stroke="url(#ss-cyan)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M68 36 H48 L40 48 L68 60 L56 72 H38" fill="none" stroke="#F8FAFC" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 48 H64 L52 60 L80 72 L72 84 H52" fill="none" stroke="url(#ss-amber)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="60" r="4.5" fill="#38BDF8"/>
+  <circle cx="38" cy="26" r="3" fill="#38BDF8"/>
+  <circle cx="82" cy="94" r="3" fill="#F59E0B"/>
+</svg>
