@@ -10,14 +10,11 @@ import {
 import { ScrollStoryCanvas } from './components/ScrollStoryCanvas';
 import { InteractiveSystemsLab } from './components/InteractiveSystemsLab';
 import { TelemetrySkillsSection } from './components/TelemetrySkillsSection';
-import { VercelDeployModal } from './components/VercelDeployModal';
 import {
   AppendixCertificatesSection,
   QrCodeCardRow,
   QrMatrixSvg,
 } from './components/AppendixCertificatesAndQr';
-
-const STORAGE_KEY = 'saket_baeng101_portfolio_v15';
 
 const CONTENTS_NAV = [
   { code: '01', label: '01 About Me', href: '#about-me' },
@@ -31,20 +28,7 @@ const CONTENTS_NAV = [
 ];
 
 export default function App() {
-  const [content, setContent] = useState<PortfolioContent>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && parsed.courseMeta && parsed.aboutMe && Array.isArray(parsed.projects)) {
-          return parsed;
-        }
-      }
-    } catch {
-      // ignore storage errors
-    }
-    return DEFAULT_PORTFOLIO_CONTENT;
-  });
+  const content: PortfolioContent = DEFAULT_PORTFOLIO_CONTENT;
 
   const [edition, setEdition] = useState<EditionId>(() => {
     if (typeof window !== 'undefined') {
@@ -59,7 +43,6 @@ export default function App() {
 
   const [reducedMotion, setReducedMotion] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
-  const [vercelModalOpen, setVercelModalOpen] = useState<boolean>(false);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState<boolean>(false);
 
   // Scroll-story progress (0..1 across the 520vh pinned runway)
@@ -74,18 +57,6 @@ export default function App() {
   const [activeProjectModal, setActiveProjectModal] = useState<ProjectItem | null>(null);
   const [mdpPdfEmbedOpen, setMdpPdfEmbedOpen] = useState<boolean>(false);
   const [activeAcademicEmbedId, setActiveAcademicEmbedId] = useState<string | null>(null);
-
-  // CMS Drawer state
-  const [cmsOpen, setCmsOpen] = useState<boolean>(false);
-  const [cmsDraft, setCmsDraft] = useState({
-    name: content.profile.name,
-    regNo: content.courseMeta.registerNumber,
-    faculty: content.courseMeta.faculty,
-    semester: content.courseMeta.semester,
-    aboutHeadline: content.aboutMe.headline,
-    aboutP1: content.aboutMe.paragraph1,
-    aboutP2: content.aboutMe.paragraph2,
-  });
 
   // Contact composer state
   const [contactName, setContactName] = useState('');
@@ -268,50 +239,6 @@ export default function App() {
     }
   };
 
-  const openCmsDrawer = () => {
-    setCmsDraft({
-      name: content.profile.name,
-      regNo: content.courseMeta.registerNumber,
-      faculty: content.courseMeta.faculty,
-      semester: content.courseMeta.semester,
-      aboutHeadline: content.aboutMe.headline,
-      aboutP1: content.aboutMe.paragraph1,
-      aboutP2: content.aboutMe.paragraph2,
-    });
-    setCmsOpen(true);
-  };
-
-  const saveCmsChanges = () => {
-    const next: PortfolioContent = structuredClone(content);
-    next.profile.name = cmsDraft.name.trim() || next.profile.name;
-    next.courseMeta.registerNumber = cmsDraft.regNo.trim() || next.courseMeta.registerNumber;
-    next.profile.regNo = next.courseMeta.registerNumber;
-    next.courseMeta.faculty = cmsDraft.faculty.trim() || next.courseMeta.faculty;
-    next.courseMeta.semester = cmsDraft.semester.trim() || next.courseMeta.semester;
-    next.aboutMe.headline = cmsDraft.aboutHeadline.trim() || next.aboutMe.headline;
-    next.aboutMe.paragraph1 = cmsDraft.aboutP1.trim() || next.aboutMe.paragraph1;
-    next.aboutMe.paragraph2 = cmsDraft.aboutP2.trim() || next.aboutMe.paragraph2;
-    setContent(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      // ignore
-    }
-    setCmsOpen(false);
-    showToast('Saved portfolio changes to local storage');
-  };
-
-  const resetCmsDefaults = () => {
-    setContent(DEFAULT_PORTFOLIO_CONTENT);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
-    setCmsOpen(false);
-    showToast('Restored default BAENG101 portfolio content');
-  };
-
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const sender = contactName.trim() || 'Reader / Evaluator';
@@ -456,24 +383,6 @@ export default function App() {
               title="Open Quick Command Palette (Ctrl+K / Cmd+K)"
             >
               <span>⌘K</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setVercelModalOpen(true)}
-              className="px-2.5 py-1.5 rounded-lg bg-[#F8FAFC] text-[#07080B] hover:bg-slate-200 font-mono-code text-[11px] font-semibold transition flex items-center gap-1 shadow"
-              title="Open Vercel Deployment Studio"
-            >
-              <span>▲</span>
-              <span className="hidden sm:inline">Vercel</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={openCmsDrawer}
-              className="px-2.5 py-1.5 rounded-lg bg-[#D4AF37]/15 hover:bg-[#D4AF37]/25 border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-mono-code font-medium transition"
-            >
-              CMS
             </button>
 
             <button
@@ -1718,27 +1627,10 @@ export default function App() {
               </span>
             </div>
             <span>
-              Saket Subhadarshee ({content.courseMeta.registerNumber}) · B.Tech. IT, VIT Vellore ·{' '}
-              <span className="text-[#D4AF37]">{content.courseMeta.rubricBadge}</span>
+              Saket Subhadarshee ({content.courseMeta.registerNumber}) · B.Tech. Information Technology · Vellore Institute of Technology, Vellore
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-4">
-            <button
-              type="button"
-              onClick={() => setVercelModalOpen(true)}
-              className="text-[#38BDF8] hover:underline"
-            >
-              ▲ Vercel Deploy Studio
-            </button>
-            <span>·</span>
-            <button
-              type="button"
-              onClick={openCmsDrawer}
-              className="text-[#D4AF37] hover:underline"
-            >
-              Edit Portfolio CMS
-            </button>
-            <span>·</span>
             <a href="#top" className="text-[#F8FAFC] hover:text-[#D4AF37]">
               Back to Cover ↑
             </a>
@@ -1839,20 +1731,6 @@ export default function App() {
         </div>
       )}
 
-      {/* VERCEL DEPLOYMENT STUDIO MODAL */}
-      <VercelDeployModal
-        isOpen={vercelModalOpen}
-        onClose={() => setVercelModalOpen(false)}
-        theme={theme}
-        edition={edition}
-        onSelectEdition={(ed) => {
-          handleEditionChange(ed);
-          showToast(`Activated ${EDITION_THEMES[ed].name}`);
-        }}
-        content={content}
-        onCopy={copyToClipboard}
-      />
-
       {/* QUICK COMMAND PALETTE (Cmd+K / Ctrl+K) */}
       {cmdPaletteOpen && (
         <div
@@ -1900,147 +1778,7 @@ export default function App() {
                 >
                   Jump to Scene 02 Calibre
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCmdPaletteOpen(false);
-                    setVercelModalOpen(true);
-                  }}
-                  className="px-3 py-1.5 rounded-lg bg-white text-slate-950 font-semibold"
-                >
-                  ▲ Vercel Deploy Studio
-                </button>
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* IN-BROWSER CONTENT CMS DRAWER */}
-      {cmsOpen && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="cms-title"
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex justify-end"
-          onClick={() => setCmsOpen(false)}
-        >
-          <div
-            className="w-full max-w-xl bg-[#0B1933] border-l border-[#D4AF37]/40 h-full flex flex-col justify-between overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="p-5 border-b border-white/10 flex items-center justify-between gap-3">
-              <div>
-                <span className="text-[11px] font-mono-code text-[#D4AF37]">
-                  BAENG101 PORTFOLIO CONTENT CMS
-                </span>
-                <h3 id="cms-title" className="font-cinzel text-lg font-bold text-white">
-                  Customize Cover &amp; Section 01 Copy
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setCmsOpen(false)}
-                className="px-3 py-1.5 rounded-lg bg-slate-900 text-slate-200 text-xs font-mono-code"
-              >
-                ✕ Close
-              </button>
-            </div>
-
-            <div className="p-5 overflow-y-auto space-y-4 text-xs flex-1">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-slate-300 mb-1 font-mono-code">Student Name</label>
-                  <input
-                    type="text"
-                    value={cmsDraft.name}
-                    onChange={(e) => setCmsDraft({ ...cmsDraft, name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-300 mb-1 font-mono-code">
-                    Registration Number
-                  </label>
-                  <input
-                    type="text"
-                    value={cmsDraft.regNo}
-                    onChange={(e) => setCmsDraft({ ...cmsDraft, regNo: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-300 mb-1 font-mono-code">Faculty</label>
-                  <input
-                    type="text"
-                    value={cmsDraft.faculty}
-                    onChange={(e) => setCmsDraft({ ...cmsDraft, faculty: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-slate-300 mb-1 font-mono-code">Semester</label>
-                  <input
-                    type="text"
-                    value={cmsDraft.semester}
-                    onChange={(e) => setCmsDraft({ ...cmsDraft, semester: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-slate-300 mb-1 font-mono-code">
-                  Section 01 — About Me Headline
-                </label>
-                <input
-                  type="text"
-                  value={cmsDraft.aboutHeadline}
-                  onChange={(e) => setCmsDraft({ ...cmsDraft, aboutHeadline: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-300 mb-1 font-mono-code">
-                  Section 01 — Paragraph 1
-                </label>
-                <textarea
-                  rows={3}
-                  value={cmsDraft.aboutP1}
-                  onChange={(e) => setCmsDraft({ ...cmsDraft, aboutP1: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-300 mb-1 font-mono-code">
-                  Section 01 — Paragraph 2
-                </label>
-                <textarea
-                  rows={3}
-                  value={cmsDraft.aboutP2}
-                  onChange={(e) => setCmsDraft({ ...cmsDraft, aboutP2: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-[#07080B] border border-white/15 text-white"
-                />
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-white/10 bg-[#07080B] flex items-center justify-between gap-2">
-              <button
-                type="button"
-                onClick={saveCmsChanges}
-                className="px-4 py-2 rounded-xl bg-[#D4AF37] text-[#07080B] font-semibold text-xs font-mono-code"
-              >
-                Save Local Draft
-              </button>
-              <button
-                type="button"
-                onClick={resetCmsDefaults}
-                className="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-mono-code"
-              >
-                Reset Defaults
-              </button>
             </div>
           </div>
         </div>
